@@ -1,0 +1,30 @@
+{
+  "name": "roccatsense",
+  "version": "0.1.0",
+  "description": "Control your Roccat Sense Mousepad",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/jonnyc0g/roccatsense.git"
+  },
+  "keywords": [
+    "keyboard",
+    "js",
+    "node",
+    "hid",
+    "roccat",
+    "sense"
+  ],
+  "author": "Johannes Aures",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jonnyc0g/roccatsense/issues"
+  },
+  "homepage": "https://github.com/jonnyc0g/roccatsense#readme",
+  "dependencies": {
+    "node-hid": "^0.7.9"
+  }
+}
