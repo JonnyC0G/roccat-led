@@ -1,6 +1,6 @@
 {
   "name": "roccat-led",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Control the LED of your ROCCAT devices",
   "main": "index.js",
   "repository": {
@@ -26,5 +26,8 @@
   "dependencies": {
     "node-hid": "^0.7.9"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
 }

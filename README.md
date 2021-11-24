@@ -1,5 +1,5 @@
 # `roccat-led` is an extended version of [`roccatvulcan`](https://github.com/simonhuwiler/roccatvulcan) by Simon Huwiler
-With this Node Module you can control your Roccat Sense Mousepad. Bring your mousepad to life!
+With this Node Module you can control your ROCCAT devices. Bring your setup to life!
 
 ## Background
 This module was inspired by the npm package `roccatvulcan` created by Simon Huwiler.
@@ -18,18 +18,32 @@ or clone repository
 - Close your Roccat Swarm App (right click -> close)
 ```javascript
 //Load module
-const RoccatSense = require('roccat-led');
+const roccatDevices = require("roccat-led");
 
-//Init Mousepad
-let mousepad = new RoccatSense({
-    productId: 13371,
-    ready: () => {
-        console.log('mousepad is ready!');
-
-        mousepad.setColor("#ff00ff");
-        mousepad.render();
+let mouse = new roccatDevices.RoccatKone({
+        ready: () => {
+            mouse.fillAll("#00ff00");
+            mouse.render();
+        }
     }
-});
+);
+
+let mousepad = new roccatDevices.RoccatSense({
+        ready: () => {
+            mousepad.fillAll("#00ff00");
+            mousepad.render();
+        }
+    }
+);
+
+let keyboard = new roccatDevices.RoccatVulcan({
+        layout: 'de-de',
+        ready: () => {
+            keyboard.fillAll("#00ff00");
+            keyboard.render();
+        }
+    }
+)
 ```
 
 ## Init Parameters
