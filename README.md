@@ -85,6 +85,7 @@ Stops the auto renderer.
 
 ### For ROCCAT Sense AIMO
 <details>
+
 Sense contains 2 seperated LED, they can be set using<br>
 **setColor(index, color)**
 ```javascript
@@ -95,6 +96,7 @@ setColor(index, color);
 
 ### For ROCCAT Kone AIMO
 <details>
+
 Kone contains 11 seperated LED, they can be set using<br>
 **setColor(index, color)**
 ```javascript
@@ -105,9 +107,11 @@ setColor(index, color);
 
 ### For ROCCAT Vulcan AIMO
 <details>
+
 **Update Keys**
 ```javascript
-updateKeys(keys, color[, backgroundColor])
+updateKey(key, colors)
+updateKey(key, colors, backgroundColor)
 ```
 Will only update the given keys, all other keys will remain the same. Except: `backgroundColor` is given!  
 Params:
