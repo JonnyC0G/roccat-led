@@ -1,6 +1,6 @@
 {
   "name": "roccat-led",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Control your ROCCAT devices LED",
   "main": "testing.js",
   "scripts": {
@@ -28,5 +28,6 @@
   "homepage": "https://github.com/jonnyc0g/roccat-led#readme",
   "dependencies": {
     "node-hid": "^0.7.9"
-  }
+  },
+  "devDependencies": {}
 }

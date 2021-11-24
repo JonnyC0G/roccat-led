@@ -1,0 +1,5 @@
+.idea
+node_modules
+.gitignore
+.gitlab-ci.yml
+package-lock.json

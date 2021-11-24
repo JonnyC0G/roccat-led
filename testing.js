@@ -12,7 +12,7 @@ let mouse = new RoccatKone({
 
 let mousepad = new RoccatSense({
         ready: () => {
-            mousepad.filglAll("#ff0000");
+            mousepad.fillAll("#ff0000");
             mousepad.render();
         }
     }
