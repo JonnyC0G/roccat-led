@@ -1,11 +1,8 @@
 {
   "name": "roccat-led",
   "version": "0.2.0",
-  "description": "Control your ROCCAT devices LED",
-  "main": "testing.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "description": "Control the LED of your ROCCAT devices",
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/jonnyc0g/roccat-led.git"
