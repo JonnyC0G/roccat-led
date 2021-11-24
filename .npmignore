@@ -1,0 +1,5 @@
+.idea
+node_modules
+.gitlab-ci.yml
+testing.js
+src/khan
