@@ -1,0 +1,33 @@
+{
+  "name": "roccat-led",
+  "version": "0.2.1",
+  "description": "Control the LED of your ROCCAT devices",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/jonnyc0g/roccat-led.git"
+  },
+  "keywords": [
+    "keyboard",
+    "js",
+    "node",
+    "hid",
+    "roccat",
+    "sense",
+    "vulcan",
+    "kone"
+  ],
+  "author": "Johannes Aures",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jonnyc0g/roccat-led/issues"
+  },
+  "homepage": "https://github.com/jonnyc0g/roccat-led#readme",
+  "dependencies": {
+    "node-hid": "^0.7.9"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
