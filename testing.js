@@ -1,19 +1,30 @@
-const RoccatSense = require("./src");
+const RoccatSense = require("./src/sense/sense");
+const RoccatVulcan = require("./src/vulcan/vulcan");
+const RoccatKone = require("./src/kone/kone");
+
+let mouse = new RoccatKone({
+        ready: () => {
+            mouse.fillAll("#ff0000");
+            mouse.render();
+        }
+    }
+);
 
 let mousepad = new RoccatSense({
-    productId: 13371,
-    ready: () => {
-        console.log('mousepad is ready!');
-
-        sleep(200).then(() => testMethod());
+        ready: () => {
+            mousepad.filglAll("#ff0000");
+            mousepad.render();
+        }
     }
-});
+);
 
-function testMethod() {
-    mousepad.setColor("#ff00ff");
-    mousepad.render();
-}
+let keyboard = new RoccatVulcan({
+        layout: 'de-de',
+        ready: () => {
+            keyboard.fillAll("#ff0000");
+            keyboard.render();
+        }
+    }
+)
 
-function sleep() {
-    return new Promise((resolve, reject) => setTimeout(() => resolve(), 200));
-}
+
