@@ -1,15 +1,15 @@
-const keylist = require('./keys.js');
+import * as keylist from "./keys.js";
 
-module.exports.KEYREADBUFFER10 = {
+export const KEYREADBUFFER10 = {
   57: keylist.KEYMAPPER['CAPSLOCK'],
 }
 
-module.exports.KEYREADBUFFER204 = {
+export const KEYREADBUFFER204 = {
   1: keylist.KEYMAPPER['WHEELUP'],
   255: keylist.KEYMAPPER['WHEELDOWN'],
 }
 
-module.exports.KEYREADBUFFER251 = {
+export const KEYREADBUFFER251 = {
 
         17: keylist.KEYMAPPER.ESC,
         18: keylist.KEYMAPPER['§'],

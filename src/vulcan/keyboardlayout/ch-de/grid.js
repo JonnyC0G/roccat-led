@@ -1,7 +1,7 @@
-const keylist = require('./keys.js');
-const consts = require('./../../../consts.js')
+import * as keylist from "./keys.js";
+import * as consts from "../../../consts.ts";
 
-module.exports.KEYGRID = [
+export const KEYGRID = [
   //Row #0
   [
     keylist.KEYMAPPER.ESC,

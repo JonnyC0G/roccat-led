@@ -1,16 +1,16 @@
-const HID = require("node-hid");
-const consts = require("./consts.js");
+import HID from "node-hid";
+import * as consts from "./consts";
 
-module.exports.getLedDevice = function (type, productId) {
-    let productIds = productId ? Array.of(productId) : consts.getProductIDs(type);
-    let usagePage = consts.getLedUsagePage(type);
-    let ledInterface = consts.getLedInterface(type);
+export function getLedDevice(type: string, productId?: number) {
+    let productIds: number[] = productId ? [productId] : consts.getProductIDs(type);
+    let usagePage: number = consts.getLedUsagePage(type);
+    let ledInterface: number = consts.getLedInterface(type);
 
     //All USB Devices
     const allDevices = HID.devices();
 
     //Filter Roccat
-    let roccatDevices = allDevices.filter(d => productIds.includes(d.productId));
+    let roccatDevices = allDevices.filter(d => (productIds.indexOf(d.productId) != -1));
 
     //Find LED Interface Number
     let ledDeviceInfo;
@@ -21,7 +21,7 @@ module.exports.getLedDevice = function (type, productId) {
     }
 
     if (!ledDeviceInfo) {
-        const msg = 'Could not find LED Device. This products are connected to your computer:'
+        const msg: string = 'Could not find LED Device. This products are connected to your computer:'
         console.log(msg)
         const dev = allDevices.filter(d => d.manufacturer && d.manufacturer.toLowerCase() === 'roccat');
         console.log(dev)
@@ -32,8 +32,8 @@ module.exports.getLedDevice = function (type, productId) {
     return new HID.HID(ledDeviceInfo.path);
 }
 
-module.exports.getCtrlDevice = function (type, productId, bruteForce = false) {
-    let productIds = productId ? Array.of(productId) : consts.getProductIDs(type);
+export function getCtrlDevice(type: string, productId: number, bruteForce: boolean = false) {
+    let productIds = productId ? [productId] : consts.getProductIDs(type);
     let usagePage = consts.getCtrlUsagePage(type);
     let ctrlInterface = consts.getCtrlInterface(type);
 
@@ -41,7 +41,7 @@ module.exports.getCtrlDevice = function (type, productId, bruteForce = false) {
     const allDevices = HID.devices();
 
     //Filter Roccat
-    let roccatDevices = allDevices.filter(d => productIds.includes(d.productId));
+    let roccatDevices = allDevices.filter(d => (productIds.indexOf(d.productId) != -1));
 
     //Find control Interface Number
     let ctrlDeviceInfo;

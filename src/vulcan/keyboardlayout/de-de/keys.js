@@ -1,4 +1,5 @@
-module.exports.KEYMAPPER = {
+// TODO: refactor into type
+export const KEYMAPPER = {
 
         "ESC": 0,
         "^": 1,
@@ -132,4 +133,4 @@ module.exports.KEYMAPPER = {
         "WHEELDOWN": 251,
 }
 
-module.exports.ALPHANUMERIC = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+export const ALPHANUMERIC = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];

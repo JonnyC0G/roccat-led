@@ -1,6 +1,4 @@
-const RoccatSense = require("./src/sense/sense");
-const RoccatVulcan = require("./src/vulcan/vulcan");
-const RoccatKone = require("./src/kone/kone");
+import {RoccatSense, RoccatVulcan, RoccatKone} from "./index";
 
 let mouse = new RoccatKone({
         ready: () => {

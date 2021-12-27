@@ -1,27 +1,36 @@
-const initialization = require('./initialization.js');
-const helpers = require('../helpers.js');
-const vulcanHelpers = require('./helpers');
-const consts = require('../consts.js')
-const deviceHelper = require('../deviceHelper.js');
+import * as initialization from "./initialization";
+import * as helpers from "../helpers";
+import * as vulcanHelpers from "./helpers";
+import * as consts from "../consts";
+import * as deviceHelper from "../deviceHelper";
 
-module.exports = class RoccatVulcan {
-    ledDevice;
+export class RoccatVulcan {
+    private readonly ledDevice;
+    private grid: { KEYGRID: (number[])[] }; //array of arrays
+    private keyList: any;
+    private keyBuffer: any;
+    private alphabet: any;
+    private animateTimers: any[];
+    private animationQueue: any[];
+    private animationQueueCurrent: number;
+    private currentColors: { r: number, g: number, b: number }[];
+    private autoRender: NodeJS.Timer;
 
-    constructor(options) {
-        options = options ? options : {};
+    constructor(options: { productId?: number, onData?: Function, ready?: Function, layout?: string }) {
+        options = options ? options : {productId: null, onData: null, ready: null, layout: null};
 
         //Import Keyboard layout
         const layout = 'layout' in options ? options.layout : 'ch-de';
-        this.grid = require(`./keyboardlayout/${layout}/grid.js`);
-        this.keylist = require(`./keyboardlayout/${layout}/keys.js`);
-        this.keybuffer = require(`./keyboardlayout/${layout}/keybuffer.js`);
-        this.alphabet = require(`./keyboardlayout/${layout}/alphabet.js`)
+        import(`./keyboardlayout/${layout}/grid.js`).then(grid => this.grid = grid);
+        import(`./keyboardlayout/${layout}/keys.js`).then(keyList => this.keyList = keyList);
+        import(`./keyboardlayout/${layout}/keybuffer.js`).then(keyBuffer => this.keyBuffer = keyBuffer);
+        import(`./keyboardlayout/${layout}/alphabet.js`).then(alphabet => this.alphabet = alphabet);
 
         console.log("Initialize Vulcan")
 
         this.animateTimers = [];
         this.animationQueue = [];
-        this.currentColors = vulcanHelpers.getKeys('#000000');
+        this.currentColors = vulcanHelpers.getKeys(helpers.hexToRgb('#000000'));
 
         if (options.productId) {
             this.ledDevice = deviceHelper.getLedDevice('vulcan', options.productId)
@@ -43,13 +52,13 @@ module.exports = class RoccatVulcan {
                 ctrlDevice.on("data", d => {
                     switch (d[2]) {
                         case 10:
-                            key = this.keybuffer.KEYREADBUFFER10[d[3]];
+                            key = this.keyBuffer.KEYREADBUFFER10[d[3]];
                             break;
                         case 204:
-                            key = this.keybuffer.KEYREADBUFFER204[d[3]];
+                            key = this.keyBuffer.KEYREADBUFFER204[d[3]];
                             break;
                         case 251:
-                            key = this.keybuffer.KEYREADBUFFER251[d[3]];
+                            key = this.keyBuffer.KEYREADBUFFER251[d[3]];
                             break;
                     }
                     options.onData({key: key, state: d[4]})
@@ -76,7 +85,7 @@ module.exports = class RoccatVulcan {
 
                 console.log("Vulcan is ready")
                 if (options.ready) {
-                    helpers.sleep().then(options.ready);
+                    helpers.sleep().then(() => options.ready());
                 }
             })
     }
@@ -93,15 +102,24 @@ module.exports = class RoccatVulcan {
         return this.grid.KEYGRID;
     }
 
-    fillAll(color) {
-        this.currentColors = vulcanHelpers.getKeys(color);
+    fillAll(color: string | { r: number, g: number, b: number }) {
+        if (typeof color === 'string') {
+            this.currentColors = vulcanHelpers.getKeys(helpers.hexToRgb(color));
+        } else {
+            this.currentColors = vulcanHelpers.getKeys(color);
+        }
     }
 
     //Colors the keys. Use background for other keys. Leave empty to use them as they are
-    updateKeys(keys, color, backgroundColor) {
+    updateKeys(keys, color: string | { r: number, g: number, b: number }, backgroundColor?: string | { r: number, g: number, b: number }) {
         //Fill background or leave as it is
-        if (backgroundColor)
-            this.currentColors = vulcanHelpers.getKeys(backgroundColor);
+        if (backgroundColor) {
+            if (typeof backgroundColor === 'string') {
+                this.currentColors = vulcanHelpers.getKeys(helpers.hexToRgb(backgroundColor));
+            } else {
+                this.currentColors = vulcanHelpers.getKeys(backgroundColor);
+            }
+        }
 
         for (let i in keys) {
             const key = keys[i];
@@ -110,28 +128,27 @@ module.exports = class RoccatVulcan {
             let id = key;
             if (typeof (key) === 'string') {
 
-                if (!(key in this.keylist.KEYMAPPER)) {
+                if (!(key in this.keyList.KEYMAPPER)) {
                     console.log("Key " + key + " not found in Keylist");
                     return;
                 }
 
-                id = this.keylist.KEYMAPPER[key];
+                id = this.keyList.KEYMAPPER[key];
             }
 
+            let rgbColor: { r: number, g: number, b: number };
             if (typeof color === "string") {
-                color = helpers.hexToRgb(color);
-            } else if (typeof color === "object") {
-                //do not transform color
+                rgbColor = helpers.hexToRgb(color);
             } else {
                 console.log("Wrong color. Must be hex-string (#ffcc00) or object ({r: 255, g: 255, b:255}")
                 console.log(color)
             }
 
-            this.currentColors[id] = color;
+            this.currentColors[id] = rgbColor;
         }
     }
 
-    render() {
+    render(): void {
         //Transform color objects to stream
         const colorBuffer = vulcanHelpers.buildColorBuffer(this.currentColor);
 
@@ -151,12 +168,12 @@ module.exports = class RoccatVulcan {
 
     }
 
-    updateKey(key, color, background) {
+    updateKey(key, color: string | {r:number, g:number, b:number}, background: string | {r:number, g:number, b:number}): void {
         this.updateKeys([key], color, background);
     }
 
-    animateKeys(keys, colorFrom, colorTo, duration) {
-        const start = Date.now();
+    private animate(keys, colorFrom, colorTo, duration) {
+        let start = Date.now();
         let rgbFrom = helpers.hexToRgb(colorFrom);
         let rgbTo = helpers.hexToRgb(colorTo);
         let rgbRunning = Object.assign({}, rgbFrom);
@@ -176,8 +193,14 @@ module.exports = class RoccatVulcan {
             rgbRunning.g = Math.round(rgbFrom.g + gMax / 100 * percentage);
             rgbRunning.b = Math.round(rgbFrom.b + bMax / 100 * percentage);
 
-            //Send new Value
-            this.updateKeys(keys, rgbRunning)
+            if (keys) {
+                //Send new Value
+                this.updateKeys(keys, rgbRunning)
+            } else {
+                //Send new Value
+                this.fillAll(rgbRunning);
+                this.render();
+            }
 
             //Clear Timer if duration ends
             if (runningTime >= duration) {
@@ -188,6 +211,14 @@ module.exports = class RoccatVulcan {
 
         }, consts.ANIMATIONINTERVAL);
         this.animateTimers.push(timer);
+    }
+
+    animateAll(colorFrom: string, colorTo: string, duration) {
+        this.animate(null, colorFrom, colorTo, duration);
+    }
+
+    animateKeys(keys, colorFrom, colorTo, duration) {
+        this.animate(keys, colorFrom,colorTo,duration);
     }
 
     close() {
@@ -217,7 +248,7 @@ module.exports = class RoccatVulcan {
         }
 
         //Create Screen and map binarygrid to it
-        let screen = vulcanHelpers.getKeys('#000000');
+        let screen = vulcanHelpers.getKeys(helpers.hexToRgb('#000000'));
         for (let row = 0; row < binaryGrid.length; row++) {
             for (let column = 0; column < binaryGrid[row].length; column++) {
                 if (column > this.grid.KEYGRID[row].length)
@@ -266,7 +297,7 @@ module.exports = class RoccatVulcan {
                 binaryGrid[row].shift();
 
             //Get black screen
-            let screen = vulcanHelpers.getKeys('#000000');
+            let screen = vulcanHelpers.getKeys(helpers.hexToRgb('#000000'));
 
             for (let row = 0; row < binaryGrid.length; row++) {
                 for (let column = 0; column < binaryGrid[row].length; column++) {

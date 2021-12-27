@@ -1,5 +1,5 @@
 .idea
 node_modules
 .gitlab-ci.yml
-testing.js
+testing.ts
 src/khan
