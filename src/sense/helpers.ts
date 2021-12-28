@@ -1,14 +1,15 @@
 import {hexToRgb} from "../helpers.js";
+import {Color, HexCode} from "../../types.js";
 
-export function buildColorBuffer(currentColors: string[] | ({ r: number, g: number, b: number }[])): number[] {
+export function buildColorBuffer(currentColors: HexCode[] | (Color[])): number[] {
     let colorBuffer = Array(currentColors.length * 4).fill({});
 
     let index = 0;
     for (let colorIndex = 0; colorIndex < currentColors.length; colorIndex++) {
         //Create empty Array
         let color = currentColors[colorIndex];
-        let rgbColor: { r: number, g: number, b: number };
-        if (typeof color === 'string') {
+        let rgbColor: Color;
+        if (color instanceof HexCode) {
             rgbColor = hexToRgb(color);
         } else {
             rgbColor = color;

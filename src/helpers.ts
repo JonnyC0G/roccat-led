@@ -1,11 +1,9 @@
-export function hexToRgb(hex: string): { r: number; b: number; g: number } {
-    let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+import {Color, HexCode} from "../types.js";
+
+export function hexToRgb(hex: HexCode): Color {
+    let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex.value);
     if (result) {
-        return {
-            r: parseInt(result[1], 16),
-            g: parseInt(result[2], 16),
-            b: parseInt(result[3], 16)
-        }
+        return new Color(parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16))
     } else throw new Error('no valid hex-string');
 
 }

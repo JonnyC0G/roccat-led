@@ -3,6 +3,7 @@ import * as helpers from "../helpers.js";
 import * as vulcanHelpers from "./helpers.js";
 import * as consts from "../consts.js";
 import * as deviceHelper from "../deviceHelper.js";
+import {Color, DEVICE_TYPES, HexCode} from "../../types.js";
 
 export class RoccatVulcan {
     private readonly ledDevice;
@@ -13,7 +14,7 @@ export class RoccatVulcan {
     private animateTimers: any[];
     private animationQueue: any[];
     private animationQueueCurrent: number | undefined;
-    private currentColors: { r: number, g: number, b: number }[];
+    private currentColors: Color[];
     private autoRender: NodeJS.Timer | undefined;
 
     constructor(options: { productId?: number, onData?: Function, ready?: Function, layout?: string }) {
@@ -30,20 +31,20 @@ export class RoccatVulcan {
 
         this.animateTimers = [];
         this.animationQueue = [];
-        this.currentColors = vulcanHelpers.getKeys(helpers.hexToRgb('#000000'));
+        this.currentColors = vulcanHelpers.getKeys(helpers.hexToRgb(new HexCode('#000000')));
 
         if (options.productId) {
-            this.ledDevice = deviceHelper.getLedDevice('vulcan', options.productId)
+            this.ledDevice = deviceHelper.getLedDevice(DEVICE_TYPES.vulcan, options.productId)
         } else {
-            this.ledDevice = deviceHelper.getLedDevice('vulcan')
+            this.ledDevice = deviceHelper.getLedDevice(DEVICE_TYPES.vulcan)
         }
 
         // initializing reading device
         let ctrlDevice;
         if (options.productId) {
-            ctrlDevice = deviceHelper.getCtrlDevice('vulcan', options.productId)
+            ctrlDevice = deviceHelper.getCtrlDevice(DEVICE_TYPES.vulcan, options.productId)
         } else {
-            ctrlDevice = deviceHelper.getCtrlDevice('vulcan')
+            ctrlDevice = deviceHelper.getCtrlDevice(DEVICE_TYPES.vulcan)
         }
 
         if (options.onData) {
@@ -73,9 +74,9 @@ export class RoccatVulcan {
 
         // initializing writing device
         if (options.productId) {
-            ctrlDevice = deviceHelper.getCtrlDevice('vulcan', options.productId, true)
+            ctrlDevice = deviceHelper.getCtrlDevice(DEVICE_TYPES.vulcan, options.productId, true)
         } else {
-            ctrlDevice = deviceHelper.getCtrlDevice('vulcan', undefined, true)
+            ctrlDevice = deviceHelper.getCtrlDevice(DEVICE_TYPES.vulcan, undefined, true)
         }
 
         //Start Keyboard initialisation
@@ -105,8 +106,8 @@ export class RoccatVulcan {
         return this.grid.KEYGRID;
     }
 
-    fillAll(color: string | { r: number, g: number, b: number }) {
-        if (typeof color === 'string') {
+    fillAll(color: HexCode | Color) {
+        if (color instanceof HexCode) {
             this.currentColors = vulcanHelpers.getKeys(helpers.hexToRgb(color));
         } else {
             this.currentColors = vulcanHelpers.getKeys(color);
@@ -114,10 +115,10 @@ export class RoccatVulcan {
     }
 
     //Colors the keys. Use background for other keys. Leave empty to use them as they are
-    updateKeys(keys, color: string | { r: number, g: number, b: number }, backgroundColor?: string | { r: number, g: number, b: number }) {
+    updateKeys(keys, color: HexCode | Color, backgroundColor?: HexCode | Color) {
         //Fill background or leave as it is
         if (backgroundColor) {
-            if (typeof backgroundColor === 'string') {
+            if (backgroundColor instanceof HexCode) {
                 this.currentColors = vulcanHelpers.getKeys(helpers.hexToRgb(backgroundColor));
             } else {
                 this.currentColors = vulcanHelpers.getKeys(backgroundColor);
@@ -139,11 +140,11 @@ export class RoccatVulcan {
                 id = this.keyList.KEYMAPPER[key];
             }
 
-            let rgbColor: { r: number, g: number, b: number };
-            if (typeof color === "string") {
+            let rgbColor: Color;
+            if (color instanceof HexCode) {
                 rgbColor = helpers.hexToRgb(color);
             } else {
-                throw new Error("Wrong color format. Must be hex-string (#ffcc00) or object ({r: 255, g: 255, b:255}")
+                rgbColor = color;
             }
 
             this.currentColors[id] = rgbColor;
@@ -170,11 +171,11 @@ export class RoccatVulcan {
 
     }
 
-    updateKey(key, color: string | {r:number, g:number, b:number}, background: string | {r:number, g:number, b:number}): void {
+    updateKey(key, color: HexCode | Color, background: HexCode | Color): void {
         this.updateKeys([key], color, background);
     }
 
-    private animate(keys, colorFrom, colorTo, duration) {
+    private animate(colorFrom: HexCode, colorTo: HexCode, duration: number, keys?): void {
         let start = Date.now();
         let rgbFrom = helpers.hexToRgb(colorFrom);
         let rgbTo = helpers.hexToRgb(colorTo);
@@ -215,21 +216,21 @@ export class RoccatVulcan {
         this.animateTimers.push(timer);
     }
 
-    animateAll(colorFrom: string, colorTo: string, duration) {
-        this.animate(null, colorFrom, colorTo, duration);
+    animateAll(colorFrom: HexCode, colorTo: HexCode, duration: number): void {
+        this.animate(colorFrom, colorTo, duration);
     }
 
-    animateKeys(keys, colorFrom, colorTo, duration) {
-        this.animate(keys, colorFrom,colorTo,duration);
+    animateKeys(keys, colorFrom: HexCode, colorTo: HexCode, duration: number): void {
+        this.animate(colorFrom, colorTo, duration, keys);
     }
 
-    close() {
+    close(): void {
         if (this.ledDevice) {
             this.ledDevice.close();
         }
     }
 
-    write(text, color, keyOffset) {
+    write(text, color: HexCode, keyOffset): void {
         //Convert Color
         const rgbColor = helpers.hexToRgb(color);
 
@@ -251,7 +252,7 @@ export class RoccatVulcan {
         }
 
         //Create Screen and map binarygrid to it
-        let screen = vulcanHelpers.getKeys(helpers.hexToRgb('#000000'));
+        let screen = vulcanHelpers.getKeys(helpers.hexToRgb(new HexCode('#000000')));
         for (let row = 0; row < binaryGrid.length; row++) {
             for (let column = 0; column < binaryGrid[row].length; column++) {
                 // @ts-ignore
@@ -304,7 +305,7 @@ export class RoccatVulcan {
                 binaryGrid[row].shift();
 
             //Get black screen
-            let screen = vulcanHelpers.getKeys(helpers.hexToRgb('#000000'));
+            let screen = vulcanHelpers.getKeys(helpers.hexToRgb(new HexCode('#000000')));
 
             for (let row = 0; row < binaryGrid.length; row++) {
                 for (let column = 0; column < binaryGrid[row].length; column++) {
