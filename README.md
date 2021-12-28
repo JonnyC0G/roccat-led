@@ -33,9 +33,9 @@ or clone repository
 - Close your Roccat Swarm App (right click -> close)
 ```javascript
 //Load module
-const roccatDevices = require("roccat-led");
+import { RoccatKone, RoccatSense, RoccatVulcan } from "roccat-led/dist/index.js";
 
-let mouse = new roccatDevices.RoccatKone({
+let mouse = new RoccatKone({
         ready: () => {
             mouse.fillAll("#00ff00"); // mouse.fillAll(new HexCode("#00ff00") since module version 0.2.8
             mouse.render();
@@ -43,7 +43,7 @@ let mouse = new roccatDevices.RoccatKone({
     }
 );
 
-let mousepad = new roccatDevices.RoccatSense({
+let mousepad = new RoccatSense({
         ready: () => {
             mousepad.fillAll("#00ff00");
             mousepad.render();
@@ -51,7 +51,7 @@ let mousepad = new roccatDevices.RoccatSense({
     }
 );
 
-let keyboard = new roccatDevices.RoccatVulcan({
+let keyboard = new RoccatVulcan({
         layout: 'de-de',
         ready: () => {
             keyboard.fillAll("#00ff00");
@@ -75,11 +75,7 @@ Callback after device is initialised.
 ```javascript
 fillAll(color);
 ```
-Will colorize the device. **Be aware**: Only hex-colors are supported. No `blue` or `black`.
-```javascript
-// Example
-mousepad.fillAll('#ffcc00');
-```
+Will colorize the device. **Be aware**: Only hex-colors are supported. No `blue` or `black`. Since version `0.2.8` only HexCode-Objects
 
 When ever you change the colors of a key, the api will store every key in the memory. The api will not send the new colors to the keyboard by itself, you need to **render** the current state. Two methods will help you:
 #### Single rendering
