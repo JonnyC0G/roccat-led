@@ -1,4 +1,4 @@
-import * as consts from "../consts";
+import * as consts from "../consts.js";
 
 export function buildColorBuffer(keylist: { r: number, g: number, b: number }[]): number[] {
     //Create empty Array

@@ -1,4 +1,4 @@
-import * as helpers from "../helpers";
+import * as helpers from "../helpers.js";
 
 function writeControl(ctrlDevice, data: number[]): number[] {
     return ctrlDevice.sendFeatureReport(data)

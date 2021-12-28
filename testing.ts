@@ -1,4 +1,4 @@
-import {RoccatSense, RoccatVulcan, RoccatKone} from "./index";
+import {RoccatSense, RoccatVulcan, RoccatKone} from "./index.js";
 
 let mouse = new RoccatKone({
         ready: () => {

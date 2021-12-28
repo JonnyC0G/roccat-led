@@ -1,9 +1,9 @@
 import HID from "node-hid";
-import * as consts from "./consts";
+import * as consts from "./consts.js";
 
 export function getLedDevice(type: string, productId?: number) {
     let productIds: number[] = productId ? [productId] : consts.getProductIDs(type);
-    let usagePage: number = consts.getLedUsagePage(type);
+    let usagePage: number | null = consts.getLedUsagePage(type);
     let ledInterface: number = consts.getLedInterface(type);
 
     //All USB Devices
@@ -32,7 +32,7 @@ export function getLedDevice(type: string, productId?: number) {
     return new HID.HID(ledDeviceInfo.path);
 }
 
-export function getCtrlDevice(type: string, productId: number, bruteForce: boolean = false) {
+export function getCtrlDevice(type: string, productId?: number, bruteForce: boolean = false) {
     let productIds = productId ? [productId] : consts.getProductIDs(type);
     let usagePage = consts.getCtrlUsagePage(type);
     let ctrlInterface = consts.getCtrlInterface(type);

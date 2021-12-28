@@ -1,4 +1,4 @@
-import {hexToRgb} from "../helpers";
+import {hexToRgb} from "../helpers.js";
 
 export function buildColorBuffer(currentColors: string[] | ({ r: number, g: number, b: number }[])): number[] {
     let colorBuffer = Array(currentColors.length * 4).fill({});

@@ -1,8 +1,11 @@
 {
   "name": "roccat-led",
-  "version": "0.2.1",
+  "version": "0.2.6",
   "description": "Control the LED of your ROCCAT devices",
-  "main": "index.ts",
+  "module": "./dist/index.js",
+  "files": [
+    "dist/"
+  ],
   "type": "module",
   "repository": {
     "type": "git",
@@ -25,13 +28,16 @@
   },
   "homepage": "https://github.com/jonnyc0g/roccat-led#readme",
   "dependencies": {
-    "@types/node": "^17.0.5",
-    "node-hid": "^0.7.9",
-    "ts-node": "^10.4.0",
-    "typescript": "^4.5.4"
+    "node-hid": "^0.7.9"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.4",
+    "@types/node": "^17.0.5"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./dist/testing.js",
+    "tsc": "tsc",
+    "prepublish": "npm run tsc"
   }
 }

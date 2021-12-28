@@ -1,23 +1,23 @@
-import * as initialization from "./initialization";
-import * as helpers from "../helpers";
-import * as vulcanHelpers from "./helpers";
-import * as consts from "../consts";
-import * as deviceHelper from "../deviceHelper";
+import * as initialization from "./initialization.js";
+import * as helpers from "../helpers.js";
+import * as vulcanHelpers from "./helpers.js";
+import * as consts from "../consts.js";
+import * as deviceHelper from "../deviceHelper.js";
 
 export class RoccatVulcan {
     private readonly ledDevice;
-    private grid: { KEYGRID: (number[])[] }; //array of arrays
+    private grid: { KEYGRID: (number[])[]; } | undefined; //array of arrays
     private keyList: any;
     private keyBuffer: any;
     private alphabet: any;
     private animateTimers: any[];
     private animationQueue: any[];
-    private animationQueueCurrent: number;
+    private animationQueueCurrent: number | undefined;
     private currentColors: { r: number, g: number, b: number }[];
-    private autoRender: NodeJS.Timer;
+    private autoRender: NodeJS.Timer | undefined;
 
     constructor(options: { productId?: number, onData?: Function, ready?: Function, layout?: string }) {
-        options = options ? options : {productId: null, onData: null, ready: null, layout: null};
+        options = options ? options : {};
 
         //Import Keyboard layout
         const layout = 'layout' in options ? options.layout : 'ch-de';
@@ -43,7 +43,7 @@ export class RoccatVulcan {
         if (options.productId) {
             ctrlDevice = deviceHelper.getCtrlDevice('vulcan', options.productId)
         } else {
-            ctrlDevice = deviceHelper.getCtrlDevice('vulcan', null)
+            ctrlDevice = deviceHelper.getCtrlDevice('vulcan')
         }
 
         if (options.onData) {
@@ -61,6 +61,7 @@ export class RoccatVulcan {
                             key = this.keyBuffer.KEYREADBUFFER251[d[3]];
                             break;
                     }
+                    // @ts-ignore
                     options.onData({key: key, state: d[4]})
                 })
                 ctrlDevice.close()
@@ -74,7 +75,7 @@ export class RoccatVulcan {
         if (options.productId) {
             ctrlDevice = deviceHelper.getCtrlDevice('vulcan', options.productId, true)
         } else {
-            ctrlDevice = deviceHelper.getCtrlDevice('vulcan', null, true)
+            ctrlDevice = deviceHelper.getCtrlDevice('vulcan', undefined, true)
         }
 
         //Start Keyboard initialisation
@@ -84,7 +85,8 @@ export class RoccatVulcan {
                 ctrlDevice.close()
 
                 console.log("Vulcan is ready")
-                if (options.ready) {
+                if (options.ready !== undefined) {
+                    // @ts-ignore
                     helpers.sleep().then(() => options.ready());
                 }
             })
@@ -99,6 +101,7 @@ export class RoccatVulcan {
     }
 
     getGrid() {
+        // @ts-ignore
         return this.grid.KEYGRID;
     }
 
@@ -140,8 +143,7 @@ export class RoccatVulcan {
             if (typeof color === "string") {
                 rgbColor = helpers.hexToRgb(color);
             } else {
-                console.log("Wrong color. Must be hex-string (#ffcc00) or object ({r: 255, g: 255, b:255}")
-                console.log(color)
+                throw new Error("Wrong color format. Must be hex-string (#ffcc00) or object ({r: 255, g: 255, b:255}")
             }
 
             this.currentColors[id] = rgbColor;
@@ -232,6 +234,7 @@ export class RoccatVulcan {
         const rgbColor = helpers.hexToRgb(color);
 
         //Create empty binary grid
+        // @ts-ignore
         let binaryGrid = this.grid.KEYGRID.map(row => row.map(cell => 0));
 
         let gridPos = keyOffset;
@@ -251,11 +254,14 @@ export class RoccatVulcan {
         let screen = vulcanHelpers.getKeys(helpers.hexToRgb('#000000'));
         for (let row = 0; row < binaryGrid.length; row++) {
             for (let column = 0; column < binaryGrid[row].length; column++) {
+                // @ts-ignore
                 if (column > this.grid.KEYGRID[row].length)
                     break
 
                 //Search corresponding key
+                // @ts-ignore
                 if (binaryGrid[row][column] === 1 && this.grid.KEYGRID[row][column] != consts.NOKEY) {
+                    // @ts-ignore
                     screen[this.grid.KEYGRID[row][column]] = rgbColor;
                 }
             }
@@ -270,6 +276,7 @@ export class RoccatVulcan {
         const rgbColor = helpers.hexToRgb(color);
 
         //Create empty binary grid
+        // @ts-ignore
         let binaryGrid = this.grid.KEYGRID.map(row => row.map(cell => 0));
 
         //Create textgrid
@@ -301,11 +308,14 @@ export class RoccatVulcan {
 
             for (let row = 0; row < binaryGrid.length; row++) {
                 for (let column = 0; column < binaryGrid[row].length; column++) {
+                    // @ts-ignore
                     if (column > this.grid.KEYGRID[row].length)
                         break
 
                     //Search corresponding key
+                    // @ts-ignore
                     if (binaryGrid[row][column] === 1 && this.grid.KEYGRID[row][column] != consts.NOKEY) {
+                        // @ts-ignore
                         screen[this.grid.KEYGRID[row][column]] = rgbColor;
                     }
                 }

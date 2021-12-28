@@ -81,7 +81,7 @@ export function getCtrlInterface(type: string): number {
     }
 }
 
-export function getLedUsagePage(type: string): number {
+export function getLedUsagePage(type: string): number | null {
     switch (type) {
         case 'sense':
             return SENSE_LED_USAGEPAGE;
@@ -96,7 +96,7 @@ export function getLedUsagePage(type: string): number {
     }
 }
 
-export function getCtrlUsagePage(type: string): number {
+export function getCtrlUsagePage(type: string): number | null {
     switch (type) {
         case 'sense':
         case 'kone':

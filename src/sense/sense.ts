@@ -1,27 +1,28 @@
-import * as consts from "../consts";
-import * as helpers from "../helpers";
-import * as senseHelpers from "./helpers";
-import * as deviceHelper from "../deviceHelper";
+import * as consts from "../consts.js";
+import * as helpers from "../helpers.js";
+import * as senseHelpers from "./helpers.js";
+import * as deviceHelper from "../deviceHelper.js";
 
 export class RoccatSense {
     private readonly ledDevice;
     private currentColors: { r: number, g: number, b: number }[];
-    private autoRender: NodeJS.Timer;
+    private autoRender: NodeJS.Timer | undefined;
 
     constructor(options: { productId?: number, ready?: Function }) {
-        options = options ? options : {productId: null, ready: null};
+        options = options ? options : {};
 
         console.log("Initialize Sense")
         this.currentColors = [helpers.hexToRgb('#000000'), helpers.hexToRgb('#000000')];
 
-        if (options.productId) {
+        if (options.productId !== undefined) {
             this.ledDevice = deviceHelper.getLedDevice('sense', options.productId)
         } else {
             this.ledDevice = deviceHelper.getLedDevice('sense')
         }
 
-        if (options.ready) {
+        if (options.ready !== undefined) {
             console.log("Sense is ready")
+            // @ts-ignore
             helpers.sleep().then(() => options.ready());
         }
     }

@@ -1,8 +1,8 @@
 // Keyboard
-export {RoccatVulcan} from "./src/vulcan/vulcan";
+export {RoccatVulcan} from "./src/vulcan/vulcan.js";
 
 // Mousepad
-export {RoccatSense} from "./src/sense/sense";
+export {RoccatSense} from "./src/sense/sense.js";
 
 // Mouse
-export {RoccatKone} from "./src/kone/kone";
+export {RoccatKone} from "./src/kone/kone.js";

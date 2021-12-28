@@ -1,15 +1,15 @@
-import * as helpers from "../helpers";
-import * as koneHelpers from "./helpers";
-import * as consts from "../consts";
-import * as deviceHelper from "../deviceHelper";
+import * as helpers from "../helpers.js";
+import * as koneHelpers from "./helpers.js";
+import * as consts from "../consts.js";
+import * as deviceHelper from "../deviceHelper.js";
 
 export class RoccatKone {
     private readonly ledDevice;
-    private currentColors: { r: number, g: number, b: number }[];
-    private autoRender: NodeJS.Timer;
+    private readonly currentColors: { r: number, g: number, b: number }[];
+    private autoRender: NodeJS.Timer | undefined;
 
     constructor(options: { productId?: number, ready?: Function }) {
-        options = options ? options : {productId: null, ready: null};
+        options = options ? options : {};
 
         console.log("Initialize Kone")
         this.currentColors = [];
@@ -26,6 +26,7 @@ export class RoccatKone {
 
         if (options.ready) {
             console.log("Kone is ready")
+            // @ts-ignore
             helpers.sleep().then(() => options.ready());
         }
     }

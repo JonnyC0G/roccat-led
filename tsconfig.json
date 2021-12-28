@@ -1,11 +1,16 @@
 {
   "compilerOptions": {
     "outDir": "./dist/",
-    "sourceMap": false,
+    "sourceMap": true,
+    "allowJs": true,
+    "esModuleInterop": true,
     "noImplicitAny": false,
-    "target": "es2015",
+    "target": "es2020",
     "module": "ESNext",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "strict": true,
+    "declaration": true,
+    "forceConsistentCasingInFileNames": true
   },
   "include": [
     "src/**/*",
@@ -13,6 +18,7 @@
   ],
   "exclude": [
     "node_modules",
+    "src/khan",
     "**/*.spec.ts"
   ]
 }
