@@ -1,7 +1,8 @@
 import HID from "node-hid";
 import * as consts from "./consts.js";
+import {DEVICE_TYPES} from "../types.js";
 
-export function getLedDevice(type: string, productId?: number) {
+export function getLedDevice(type: DEVICE_TYPES, productId?: number) {
     let productIds: number[] = productId ? [productId] : consts.getProductIDs(type);
     let usagePage: number | null = consts.getLedUsagePage(type);
     let ledInterface: number = consts.getLedInterface(type);
@@ -32,7 +33,7 @@ export function getLedDevice(type: string, productId?: number) {
     return new HID.HID(ledDeviceInfo.path);
 }
 
-export function getCtrlDevice(type: string, productId?: number, bruteForce: boolean = false) {
+export function getCtrlDevice(type: DEVICE_TYPES, productId?: number, bruteForce: boolean = false) {
     let productIds = productId ? [productId] : consts.getProductIDs(type);
     let usagePage = consts.getCtrlUsagePage(type);
     let ctrlInterface = consts.getCtrlInterface(type);
