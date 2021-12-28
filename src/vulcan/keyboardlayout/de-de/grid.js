@@ -1,5 +1,5 @@
 import * as keylist from "./keys.js";
-import * as consts from "../../../consts.ts";
+import * as consts from "../../../consts.js";
 
 export const KEYGRID = [
   //Row #0
