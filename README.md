@@ -6,6 +6,21 @@ This module was inspired by the npm package `roccatvulcan` created by Simon Huwi
 [Link](https://github.com/simonhuwiler/roccatvulcan) to his repo, check out his amazing work.
 <br>This module not only supports *Vulcan AIMO* keyboards, but also *Sense AIMO* mousepads and *Kone AIMO* mouse. If you want to integrate even more devices feel free to contribute!
 
+## Versions
+### `0.2.8`
+Added color types for safer use
+```javascript
+let color = new HexColor("#00ff00");
+mousepad.fillAll(color);
+```
+Added animation for sense and kone
+
+### `0.2.6`
+Added typescript definitions
+
+### `0.2.1`
+initial release
+
 ## Installation
 Install per npm  
 `npm install roccat-led`  
@@ -22,7 +37,7 @@ const roccatDevices = require("roccat-led");
 
 let mouse = new roccatDevices.RoccatKone({
         ready: () => {
-            mouse.fillAll("#00ff00");
+            mouse.fillAll("#00ff00"); // mouse.fillAll(new HexCode("#00ff00") since module version 0.2.8
             mouse.render();
         }
     }
